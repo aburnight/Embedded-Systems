@@ -14,6 +14,8 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h> //for accessing the ids and pins
 #include <avr/interrupt.h>
+#include <stdbool.h>
+#include <string.h>
 
 const char access_id[29][10]= {
 	"1265469449", 
@@ -80,49 +82,107 @@ const char access_pin[29][4] = {
 char currentID[10] = {}; //holds the id from the scanned card
 char pin[4] = {}; //holds the entered pin
 char bitString[5] = {}; //holds the 5bit values
-int i = 0; //holds the count of the strobe
-int j = 0; //holds count for 5bit cycle 
+bool startID = false; 
+bool endID = true; 
+int i = 0; //id counter
+int j = 0; //5 bit counter
+int k = 0; //index of id and pin
 
 ISR(INT0_vect){ //interrupt for magnetic card reader
-	//determine rise or fall
-	if ((PORTD & 0x04) == 0x00){ //if int0 pin is pulled low 
-		//initialize external interrupt 1 on falling edge
-		//this will be used to determine when a new data bit is passed
-		EIMSK = EIMSK | (1<<INT1);  
-	} 
-	else {
-		EIMSK = EIMSK & 0xFD; //disable int1 external interrupt
-		i = 0; //reset counter
-	
-	}
-	//enable/disable interrupt for data
-	//reset i 
+	//readNextChar((PORTD masked with data pin)); 
 } 
 
-ISR(INT1_vect){//interrupt for data from magnetic card reader
-	//counter for number 
-	//second counter for place in conversion
-	//while in i range
-	//collect binary, convert five bits at a time 
-	i++; //increment counter
+void verifyID(){
+	bool validID = false;
+	while (validID == false && k < 29){ //loop to determine if found
+		if (strcmp(currentID, access_id[k]) == 0){
+			validID = true;
+			//print LCD valid
+			//verify pin
+		}
+		else {
+			k++;
+		}
+	}
+	if (validID == false){
+		//print invalid ID
+	}
+	if (validID == true){
+		//print LCD valid and wait for LCD
+	}
+	else {
+		//print invalid
+	}
 }
 
-char readNextChar(){
+char readNextChar(int dataPin){
+	if(startID == false && dataPin == 0){ //start of data segment
+		startID = true;  
+		bitString[0] = 1; 
+		i++; 
+		j++; 
+	}
+	if (i>10){
+		verifyID(); 
+		i = 0;
+		//while card reader is still low
+		//while (){ 
+		//} 
+	}
+}
+
+//error in reading card print to LCD
+void readError(){
 	
 }
+
+//add number based on five bit
+void addToID (){
+	if (strcmp(bitString, "00001") == 0){
+		currentID[i] = '0'; 
+	}
+	else if (strcmp(bitString, "10000") == 0){
+		currentID[i] = '1';
+	}
+	else if (strcmp(bitString, "01000") == 0){
+		currentID[i] = '2';
+	}
+	else if (strcmp(bitString, "11001") == 0){
+		currentID[i] = '3';
+	}
+	else if (strcmp(bitString, "00100") == 0){
+		currentID[i] = '4';
+	}
+	else if (strcmp(bitString, "10101") == 0){
+		currentID[i] = '5';
+	}
+	else if (strcmp(bitString, "01101") == 0){
+		currentID[i] = '6';
+	}
+	else if (strcmp(bitString, "11100") == 0){
+		currentID[i] = '7';
+	}
+	else if (strcmp(bitString, "00010") == 0){
+		currentID[i] = '8';
+	}
+	else if (strcmp(bitString, "10011") == 0 ){
+		currentID[i] ='9'; 
+	}
+}
+
+
 
 void main(void){
 	
 	DDRD = 0x00; //Set PD2 (INT0), PD3 (INT1) as input
 	
 	sei(); //enable global interrupt
-	
+
 	//initialize external interrupt 0 
 	//this will be used to determine when a card enters magnetic card reader
 	EIMSK = EIMSK | 1<<INT0; //enable external interrupt 0
-	EICRA = EICRA | 1<<ISC00; //any logic change interrupt
-	//set interrupt 1 on falling edge
-	EICRA = EICRA | 1<<ISC11;
+	EICRA = EICRA | 1<<ISC01; //enable on falling edge
+	
 
     
 	while(1)

@@ -3,27 +3,25 @@ Lab5.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000176  00000000  00000000  00000074  2**1
+  0 .text         000000cc  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          00000002  00800100  00800100  000001ea  2**0
-                  ALLOC
-  2 .comment      00000030  00000000  00000000  000001ea  2**0
+  1 .comment      00000030  00000000  00000000  00000120  2**0
                   CONTENTS, READONLY
-  3 .debug_aranges 00000038  00000000  00000000  0000021a  2**0
+  2 .debug_aranges 00000048  00000000  00000000  00000150  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_info   000001b6  00000000  00000000  00000252  2**0
+  3 .debug_info   00000241  00000000  00000000  00000198  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_abbrev 000000a4  00000000  00000000  00000408  2**0
+  4 .debug_abbrev 0000010a  00000000  00000000  000003d9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   000000ec  00000000  00000000  000004ac  2**0
+  5 .debug_line   00000141  00000000  00000000  000004e3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  000000d0  00000000  00000000  00000598  2**2
+  6 .debug_frame  000000dc  00000000  00000000  00000624  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    0000017a  00000000  00000000  00000668  2**0
+  7 .debug_str    000001ae  00000000  00000000  00000700  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_loc    00000188  00000000  00000000  000007e2  2**0
+  8 .debug_loc    00000196  00000000  00000000  000008ae  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000028  00000000  00000000  0000096a  2**0
+  9 .debug_ranges 00000038  00000000  00000000  00000a44  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -31,7 +29,7 @@ Disassembly of section .text:
 00000000 <__vectors>:
    0:	19 c0       	rjmp	.+50     	; 0x34 <__ctors_end>
    2:	34 c0       	rjmp	.+104    	; 0x6c <__vector_1>
-   4:	72 c0       	rjmp	.+228    	; 0xea <__vector_2>
+   4:	32 c0       	rjmp	.+100    	; 0x6a <__bad_interrupt>
    6:	31 c0       	rjmp	.+98     	; 0x6a <__bad_interrupt>
    8:	30 c0       	rjmp	.+96     	; 0x6a <__bad_interrupt>
    a:	2f c0       	rjmp	.+94     	; 0x6a <__bad_interrupt>
@@ -68,8 +66,8 @@ Disassembly of section .text:
   40:	11 e0       	ldi	r17, 0x01	; 1
   42:	a0 e0       	ldi	r26, 0x00	; 0
   44:	b1 e0       	ldi	r27, 0x01	; 1
-  46:	e6 e7       	ldi	r30, 0x76	; 118
-  48:	f1 e0       	ldi	r31, 0x01	; 1
+  46:	ec ec       	ldi	r30, 0xCC	; 204
+  48:	f0 e0       	ldi	r31, 0x00	; 0
   4a:	02 c0       	rjmp	.+4      	; 0x50 <__do_copy_data+0x10>
   4c:	05 90       	lpm	r0, Z+
   4e:	0d 92       	st	X+, r0
@@ -87,195 +85,80 @@ Disassembly of section .text:
   5e:	1d 92       	st	X+, r1
 
 00000060 <.do_clear_bss_start>:
-  60:	a2 30       	cpi	r26, 0x02	; 2
+  60:	a0 30       	cpi	r26, 0x00	; 0
   62:	b2 07       	cpc	r27, r18
   64:	e1 f7       	brne	.-8      	; 0x5e <.do_clear_bss_loop>
-  66:	60 d0       	rcall	.+192    	; 0x128 <main>
-  68:	84 c0       	rjmp	.+264    	; 0x172 <_exit>
+  66:	14 d0       	rcall	.+40     	; 0x90 <main>
+  68:	2f c0       	rjmp	.+94     	; 0xc8 <_exit>
 
 0000006a <__bad_interrupt>:
   6a:	ca cf       	rjmp	.-108    	; 0x0 <__vectors>
 
 0000006c <__vector_1>:
-char pin[4] = {}; //holds the entered pin
-char bitString[5] = {}; //holds the 5bit values
-int i = 0; //holds the count of the strobe
-int j = 0; //holds count for 5bit cycle 
-
-ISR(INT0_vect){ //interrupt for magnetic card reader
+	}
+	else if (strcmp(bitString, "10000") == 0){
+		currentID[i] = '1';
+	}
+	else if (strcmp(bitString, "01000") == 0){
+		currentID[i] = '2';
   6c:	1f 92       	push	r1
+	}
+	else if (strcmp(bitString, "11001") == 0){
   6e:	0f 92       	push	r0
   70:	00 90 5f 00 	lds	r0, 0x005F
   74:	0f 92       	push	r0
   76:	11 24       	eor	r1, r1
-  78:	2f 93       	push	r18
-  7a:	3f 93       	push	r19
-  7c:	8f 93       	push	r24
-  7e:	9f 93       	push	r25
-  80:	ef 93       	push	r30
-  82:	ff 93       	push	r31
-  84:	cf 93       	push	r28
-  86:	df 93       	push	r29
-  88:	cd b7       	in	r28, 0x3d	; 61
-  8a:	de b7       	in	r29, 0x3e	; 62
-	//determine rise or fall
-	if ((PORTD & 0x04) == 0x00){ //if int0 pin is pulled low 
-  8c:	8b e2       	ldi	r24, 0x2B	; 43
-  8e:	90 e0       	ldi	r25, 0x00	; 0
-  90:	fc 01       	movw	r30, r24
-  92:	80 81       	ld	r24, Z
-  94:	88 2f       	mov	r24, r24
-  96:	90 e0       	ldi	r25, 0x00	; 0
-  98:	84 70       	andi	r24, 0x04	; 4
-  9a:	99 27       	eor	r25, r25
-  9c:	00 97       	sbiw	r24, 0x00	; 0
-  9e:	51 f4       	brne	.+20     	; 0xb4 <__vector_1+0x48>
-		//initialize external interrupt 1 on falling edge
-		//this will be used to determine when a new data bit is passed
-		EIMSK = EIMSK | (1<<INT1);  
-  a0:	8d e3       	ldi	r24, 0x3D	; 61
-  a2:	90 e0       	ldi	r25, 0x00	; 0
-  a4:	2d e3       	ldi	r18, 0x3D	; 61
-  a6:	30 e0       	ldi	r19, 0x00	; 0
-  a8:	f9 01       	movw	r30, r18
-  aa:	20 81       	ld	r18, Z
-  ac:	22 60       	ori	r18, 0x02	; 2
-  ae:	fc 01       	movw	r30, r24
-  b0:	20 83       	st	Z, r18
-  b2:	0d c0       	rjmp	.+26     	; 0xce <__vector_1+0x62>
-	} 
-	else {
-		EIMSK = EIMSK & 0xFD; //disable int1 external interrupt
-  b4:	8d e3       	ldi	r24, 0x3D	; 61
+  78:	cf 93       	push	r28
+  7a:	df 93       	push	r29
+		currentID[i] = '3';
+  7c:	cd b7       	in	r28, 0x3d	; 61
+  7e:	de b7       	in	r29, 0x3e	; 62
+  80:	df 91       	pop	r29
+  82:	cf 91       	pop	r28
+  84:	0f 90       	pop	r0
+  86:	00 92 5f 00 	sts	0x005F, r0
+  8a:	0f 90       	pop	r0
+  8c:	1f 90       	pop	r1
+  8e:	18 95       	reti
+
+00000090 <main>:
+	}
+	else if (strcmp(bitString, "00100") == 0){
+  90:	cf 93       	push	r28
+  92:	df 93       	push	r29
+  94:	cd b7       	in	r28, 0x3d	; 61
+  96:	de b7       	in	r29, 0x3e	; 62
+  98:	8a e2       	ldi	r24, 0x2A	; 42
+  9a:	90 e0       	ldi	r25, 0x00	; 0
+  9c:	fc 01       	movw	r30, r24
+		currentID[i] = '4';
+  9e:	10 82       	st	Z, r1
+  a0:	78 94       	sei
+  a2:	8d e3       	ldi	r24, 0x3D	; 61
+  a4:	90 e0       	ldi	r25, 0x00	; 0
+  a6:	2d e3       	ldi	r18, 0x3D	; 61
+  a8:	30 e0       	ldi	r19, 0x00	; 0
+  aa:	f9 01       	movw	r30, r18
+  ac:	20 81       	ld	r18, Z
+  ae:	21 60       	ori	r18, 0x01	; 1
+  b0:	fc 01       	movw	r30, r24
+	}
+	else if (strcmp(bitString, "10101") == 0){
+  b2:	20 83       	st	Z, r18
+  b4:	89 e6       	ldi	r24, 0x69	; 105
   b6:	90 e0       	ldi	r25, 0x00	; 0
-  b8:	2d e3       	ldi	r18, 0x3D	; 61
+  b8:	29 e6       	ldi	r18, 0x69	; 105
   ba:	30 e0       	ldi	r19, 0x00	; 0
   bc:	f9 01       	movw	r30, r18
   be:	20 81       	ld	r18, Z
-  c0:	2d 7f       	andi	r18, 0xFD	; 253
+		currentID[i] = '5';
+  c0:	22 60       	ori	r18, 0x02	; 2
   c2:	fc 01       	movw	r30, r24
   c4:	20 83       	st	Z, r18
-		i = 0; //reset counter
-  c6:	10 92 01 01 	sts	0x0101, r1
-  ca:	10 92 00 01 	sts	0x0100, r1
-	
-	}
-	//enable/disable interrupt for data
-	//reset i 
-} 
-  ce:	df 91       	pop	r29
-  d0:	cf 91       	pop	r28
-  d2:	ff 91       	pop	r31
-  d4:	ef 91       	pop	r30
-  d6:	9f 91       	pop	r25
-  d8:	8f 91       	pop	r24
-  da:	3f 91       	pop	r19
-  dc:	2f 91       	pop	r18
-  de:	0f 90       	pop	r0
-  e0:	00 92 5f 00 	sts	0x005F, r0
-  e4:	0f 90       	pop	r0
-  e6:	1f 90       	pop	r1
-  e8:	18 95       	reti
+  c6:	ff cf       	rjmp	.-2      	; 0xc6 <main+0x36>
 
-000000ea <__vector_2>:
+000000c8 <_exit>:
+  c8:	f8 94       	cli
 
-ISR(INT1_vect){//interrupt for data from magnetic card reader
-  ea:	1f 92       	push	r1
-  ec:	0f 92       	push	r0
-  ee:	00 90 5f 00 	lds	r0, 0x005F
-  f2:	0f 92       	push	r0
-  f4:	11 24       	eor	r1, r1
-  f6:	8f 93       	push	r24
-  f8:	9f 93       	push	r25
-  fa:	cf 93       	push	r28
-  fc:	df 93       	push	r29
-  fe:	cd b7       	in	r28, 0x3d	; 61
- 100:	de b7       	in	r29, 0x3e	; 62
-	//counter for number 
-	//second counter for place in conversion
-	//while in i range
-	//collect binary, convert five bits at a time 
-	i++; //increment counter
- 102:	80 91 00 01 	lds	r24, 0x0100
- 106:	90 91 01 01 	lds	r25, 0x0101
- 10a:	01 96       	adiw	r24, 0x01	; 1
- 10c:	90 93 01 01 	sts	0x0101, r25
- 110:	80 93 00 01 	sts	0x0100, r24
-}
- 114:	df 91       	pop	r29
- 116:	cf 91       	pop	r28
- 118:	9f 91       	pop	r25
- 11a:	8f 91       	pop	r24
- 11c:	0f 90       	pop	r0
- 11e:	00 92 5f 00 	sts	0x005F, r0
- 122:	0f 90       	pop	r0
- 124:	1f 90       	pop	r1
- 126:	18 95       	reti
-
-00000128 <main>:
-
-char readNextChar(){
-	
-}
-
-void main(void){
- 128:	cf 93       	push	r28
- 12a:	df 93       	push	r29
- 12c:	cd b7       	in	r28, 0x3d	; 61
- 12e:	de b7       	in	r29, 0x3e	; 62
-	
-	DDRD = 0x00; //Set PD2 (INT0), PD3 (INT1) as input
- 130:	8a e2       	ldi	r24, 0x2A	; 42
- 132:	90 e0       	ldi	r25, 0x00	; 0
- 134:	fc 01       	movw	r30, r24
- 136:	10 82       	st	Z, r1
-	
-	sei(); //enable global interrupt
- 138:	78 94       	sei
-	
-	//initialize external interrupt 0 
-	//this will be used to determine when a card enters magnetic card reader
-	EIMSK = EIMSK | 1<<INT0; //enable external interrupt 0
- 13a:	8d e3       	ldi	r24, 0x3D	; 61
- 13c:	90 e0       	ldi	r25, 0x00	; 0
- 13e:	2d e3       	ldi	r18, 0x3D	; 61
- 140:	30 e0       	ldi	r19, 0x00	; 0
- 142:	f9 01       	movw	r30, r18
- 144:	20 81       	ld	r18, Z
- 146:	21 60       	ori	r18, 0x01	; 1
- 148:	fc 01       	movw	r30, r24
- 14a:	20 83       	st	Z, r18
-	EICRA = EICRA | 1<<ISC00; //any logic change interrupt
- 14c:	89 e6       	ldi	r24, 0x69	; 105
- 14e:	90 e0       	ldi	r25, 0x00	; 0
- 150:	29 e6       	ldi	r18, 0x69	; 105
- 152:	30 e0       	ldi	r19, 0x00	; 0
- 154:	f9 01       	movw	r30, r18
- 156:	20 81       	ld	r18, Z
- 158:	21 60       	ori	r18, 0x01	; 1
- 15a:	fc 01       	movw	r30, r24
- 15c:	20 83       	st	Z, r18
-	//set interrupt 1 on falling edge
-	EICRA = EICRA | 1<<ISC11;
- 15e:	89 e6       	ldi	r24, 0x69	; 105
- 160:	90 e0       	ldi	r25, 0x00	; 0
- 162:	29 e6       	ldi	r18, 0x69	; 105
- 164:	30 e0       	ldi	r19, 0x00	; 0
- 166:	f9 01       	movw	r30, r18
- 168:	20 81       	ld	r18, Z
- 16a:	28 60       	ori	r18, 0x08	; 8
- 16c:	fc 01       	movw	r30, r24
- 16e:	20 83       	st	Z, r18
-    
-	while(1)
-    {	
-        //TODO:: Please write your application code 
- 
-    }
- 170:	ff cf       	rjmp	.-2      	; 0x170 <main+0x48>
-
-00000172 <_exit>:
- 172:	f8 94       	cli
-
-00000174 <__stop_program>:
- 174:	ff cf       	rjmp	.-2      	; 0x174 <__stop_program>
+000000ca <__stop_program>:
+  ca:	ff cf       	rjmp	.-2      	; 0xca <__stop_program>
