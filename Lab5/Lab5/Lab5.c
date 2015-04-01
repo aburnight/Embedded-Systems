@@ -16,6 +16,8 @@
 #include <avr/interrupt.h>
 #include <stdbool.h>
 #include <string.h>
+//#include "hd44780.h"
+//#include "hd44780_settings.h"
 
 const char access_id[29][10]= {
 	"1265469449", 
@@ -201,6 +203,11 @@ int main(void){
 	EIMSK = EIMSK | 1<<INT0; //enable external interrupt 0
 	EICRA = EICRA | 1<<ISC01; //enable on falling edge
 	
+	//initialize LCD
+	//board_init(); 
+	//lcd_init(); 
+	//lcd_clrscr(); 
+	//lcd_puts("Hello World..."); 
 
     
 	while(1)

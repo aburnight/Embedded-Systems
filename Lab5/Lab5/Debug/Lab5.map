@@ -423,18 +423,18 @@ END GROUP
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x124 Lab5.o
 
-.debug_line     0x00000000      0x15d
+.debug_line     0x00000000      0x15f
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x15d Lab5.o
+ .debug_line    0x00000000      0x15f Lab5.o
 
 .debug_frame    0x00000000       0xe8
  *(.debug_frame)
  .debug_frame   0x00000000       0xe8 Lab5.o
 
-.debug_str      0x00000000      0x1a9
+.debug_str      0x00000000      0x1b0
  *(.debug_str)
- .debug_str     0x00000000      0x1a9 Lab5.o
-                                0x1e2 (size before relaxing)
+ .debug_str     0x00000000      0x1b0 Lab5.o
+                                0x1e9 (size before relaxing)
 
 .debug_loc      0x00000000      0x1b0
  *(.debug_loc)
