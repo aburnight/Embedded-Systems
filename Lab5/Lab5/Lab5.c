@@ -143,10 +143,10 @@ char addToID (){
 	else if (strcmp(bitString, "10011") == 0 ){
 		return '9';
 	}
-	else if(strcmp(bitString, "11010")){
+	else if(strcmp(bitString, "11010")==0){
 		return ';';
 	}
-	else if (strcmp(bitString, "11111")){
+	else if (strcmp(bitString, "11111")==0){
 		return '?'; 	
 	}
 	return '*'; 
