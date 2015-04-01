@@ -89,7 +89,7 @@ int j = 0; //5 bit counter
 int k = 0; //index of id and pin
 
 ISR(INT0_vect){ //interrupt for magnetic card reader
-	//readNextChar((PORTD masked with data pin)); 
+	//readNextBit((PORTD masked with data pin, send 1 for low, 0 for high)); 
 } 
 
 void verifyID(){
@@ -107,27 +107,81 @@ void verifyID(){
 	if (validID == false){
 		//print invalid ID
 	}
-	if (validID == true){
-		//print LCD valid and wait for LCD
-	}
-	else {
-		//print invalid
-	}
 }
 
-char readNextChar(int dataPin){
-	if(startID == false && dataPin == 0){ //start of data segment
-		startID = true;  
-		bitString[0] = 1; 
-		i++; 
-		j++; 
+//add number based on five bit
+char addToID (){
+	if (strcmp(bitString, "00001") == 0){
+		return '0';
 	}
-	if (i>10){
-		verifyID(); 
-		i = 0;
-		//while card reader is still low
-		//while (){ 
-		//} 
+	else if (strcmp(bitString, "10000") == 0){
+		return '1';
+	}
+	else if (strcmp(bitString, "01000") == 0){
+		return '2';
+	}
+	else if (strcmp(bitString, "11001") == 0){
+		return '3';
+	}
+	else if (strcmp(bitString, "00100") == 0){
+		return '4';
+	}
+	else if (strcmp(bitString, "10101") == 0){
+		return '5';
+	}
+	else if (strcmp(bitString, "01101") == 0){
+		return '6';
+	}
+	else if (strcmp(bitString, "11100") == 0){
+		return '7';
+	}
+	else if (strcmp(bitString, "00010") == 0){
+		return '8';
+	}
+	else if (strcmp(bitString, "10011") == 0 ){
+		return '9';
+	}
+	else if(strcmp(bitString, "11010")){
+		return ';';
+	}
+	else if (strcmp(bitString, "11111")){
+		return '?'; 	
+	}
+	return '*'; 
+}
+
+void nextBit(int dataPin){
+	if(startID == false){ //determine start of data segment  
+		bitString[j] = dataPin; 
+		j++; 
+		if(j==1 && dataPin != 1){
+			j=0; //the start of data segment has not begun  
+		}
+		if(j==5 && addToID() == ';'){
+			j=0; //reset 5bit string counter
+			startID = true; 
+			i = 0; 
+			endID = false; 
+		}
+	}
+	else if (i<10){
+		bitString[j] = dataPin; 
+		j++; 
+		if(j==5){
+			j=0; //reset 5bit string counter
+			currentID[i] = addToID(); 
+			i++; //increment position in ID string
+		}
+	}
+	else if (endID != true){
+		bitString[j] = dataPin; 
+		j++; 
+		if(j==5){
+			j = 0; 
+			if(addToID() == '?') {
+				endID = true; 
+			}
+		}
 	}
 }
 
@@ -136,43 +190,7 @@ void readError(){
 	
 }
 
-//add number based on five bit
-void addToID (){
-	if (strcmp(bitString, "00001") == 0){
-		currentID[i] = '0'; 
-	}
-	else if (strcmp(bitString, "10000") == 0){
-		currentID[i] = '1';
-	}
-	else if (strcmp(bitString, "01000") == 0){
-		currentID[i] = '2';
-	}
-	else if (strcmp(bitString, "11001") == 0){
-		currentID[i] = '3';
-	}
-	else if (strcmp(bitString, "00100") == 0){
-		currentID[i] = '4';
-	}
-	else if (strcmp(bitString, "10101") == 0){
-		currentID[i] = '5';
-	}
-	else if (strcmp(bitString, "01101") == 0){
-		currentID[i] = '6';
-	}
-	else if (strcmp(bitString, "11100") == 0){
-		currentID[i] = '7';
-	}
-	else if (strcmp(bitString, "00010") == 0){
-		currentID[i] = '8';
-	}
-	else if (strcmp(bitString, "10011") == 0 ){
-		currentID[i] ='9'; 
-	}
-}
-
-
-
-void main(void){
+int main(void){
 	
 	DDRD = 0x00; //Set PD2 (INT0), PD3 (INT1) as input
 	
@@ -190,4 +208,5 @@ void main(void){
         //TODO:: Please write your application code 
  
     }
+	return 0; 
 }

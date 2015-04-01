@@ -32,12 +32,11 @@ Discarded input sections
  .bss.k         0x00000000        0x2 Lab5.o
  .text.verifyID
                 0x00000000       0x70 Lab5.o
- .text.readNextChar
-                0x00000000       0x74 Lab5.o
+ .rodata        0x00000000       0x48 Lab5.o
+ .text.addToID  0x00000000       0xe8 Lab5.o
+ .text.nextBit  0x00000000      0x16a Lab5.o
  .text.readError
                 0x00000000        0xe Lab5.o
- .rodata        0x00000000       0x3c Lab5.o
- .text.addToID  0x00000000      0x160 Lab5.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
@@ -416,30 +415,30 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x241
+.debug_info     0x00000000      0x245
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x241 Lab5.o
+ .debug_info    0x00000000      0x245 Lab5.o
 
-.debug_abbrev   0x00000000      0x10a
+.debug_abbrev   0x00000000      0x124
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x10a Lab5.o
+ .debug_abbrev  0x00000000      0x124 Lab5.o
 
-.debug_line     0x00000000      0x141
+.debug_line     0x00000000      0x15d
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x141 Lab5.o
+ .debug_line    0x00000000      0x15d Lab5.o
 
-.debug_frame    0x00000000       0xdc
+.debug_frame    0x00000000       0xe8
  *(.debug_frame)
- .debug_frame   0x00000000       0xdc Lab5.o
+ .debug_frame   0x00000000       0xe8 Lab5.o
 
-.debug_str      0x00000000      0x1ae
+.debug_str      0x00000000      0x1a9
  *(.debug_str)
- .debug_str     0x00000000      0x1ae Lab5.o
-                                0x1e7 (size before relaxing)
+ .debug_str     0x00000000      0x1a9 Lab5.o
+                                0x1e2 (size before relaxing)
 
-.debug_loc      0x00000000      0x196
+.debug_loc      0x00000000      0x1b0
  *(.debug_loc)
- .debug_loc     0x00000000      0x196 Lab5.o
+ .debug_loc     0x00000000      0x1b0 Lab5.o
 
 .debug_macinfo
  *(.debug_macinfo)

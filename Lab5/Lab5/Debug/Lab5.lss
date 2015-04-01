@@ -9,19 +9,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   2 .debug_aranges 00000048  00000000  00000000  00000150  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   00000241  00000000  00000000  00000198  2**0
+  3 .debug_info   00000245  00000000  00000000  00000198  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 0000010a  00000000  00000000  000003d9  2**0
+  4 .debug_abbrev 00000124  00000000  00000000  000003dd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   00000141  00000000  00000000  000004e3  2**0
+  5 .debug_line   0000015d  00000000  00000000  00000501  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  000000dc  00000000  00000000  00000624  2**2
+  6 .debug_frame  000000e8  00000000  00000000  00000660  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    000001ae  00000000  00000000  00000700  2**0
+  7 .debug_str    000001a9  00000000  00000000  00000748  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    00000196  00000000  00000000  000008ae  2**0
+  8 .debug_loc    000001b0  00000000  00000000  000008f1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000038  00000000  00000000  00000a44  2**0
+  9 .debug_ranges 00000038  00000000  00000000  00000aa1  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -95,46 +95,48 @@ Disassembly of section .text:
   6a:	ca cf       	rjmp	.-108    	; 0x0 <__vectors>
 
 0000006c <__vector_1>:
-	}
-	else if (strcmp(bitString, "10000") == 0){
-		currentID[i] = '1';
-	}
-	else if (strcmp(bitString, "01000") == 0){
-		currentID[i] = '2';
+		bitString[j] = dataPin; 
+		j++; 
+		if(j==1 && dataPin != 1){
+			j=0; //the start of data segment has not begun  
+		}
+		if(j==5 && addToID() == ';'){
   6c:	1f 92       	push	r1
-	}
-	else if (strcmp(bitString, "11001") == 0){
   6e:	0f 92       	push	r0
   70:	00 90 5f 00 	lds	r0, 0x005F
   74:	0f 92       	push	r0
   76:	11 24       	eor	r1, r1
   78:	cf 93       	push	r28
+			j=0; //reset 5bit string counter
   7a:	df 93       	push	r29
-		currentID[i] = '3';
   7c:	cd b7       	in	r28, 0x3d	; 61
   7e:	de b7       	in	r29, 0x3e	; 62
   80:	df 91       	pop	r29
+			startID = true; 
   82:	cf 91       	pop	r28
   84:	0f 90       	pop	r0
   86:	00 92 5f 00 	sts	0x005F, r0
+			i = 0; 
   8a:	0f 90       	pop	r0
   8c:	1f 90       	pop	r1
   8e:	18 95       	reti
 
 00000090 <main>:
-	}
-	else if (strcmp(bitString, "00100") == 0){
+			endID = false; 
   90:	cf 93       	push	r28
   92:	df 93       	push	r29
   94:	cd b7       	in	r28, 0x3d	; 61
+		}
+	}
+	else if (i<10){
   96:	de b7       	in	r29, 0x3e	; 62
   98:	8a e2       	ldi	r24, 0x2A	; 42
   9a:	90 e0       	ldi	r25, 0x00	; 0
   9c:	fc 01       	movw	r30, r24
-		currentID[i] = '4';
   9e:	10 82       	st	Z, r1
   a0:	78 94       	sei
   a2:	8d e3       	ldi	r24, 0x3D	; 61
+		bitString[j] = dataPin; 
   a4:	90 e0       	ldi	r25, 0x00	; 0
   a6:	2d e3       	ldi	r18, 0x3D	; 61
   a8:	30 e0       	ldi	r19, 0x00	; 0
@@ -142,22 +144,21 @@ Disassembly of section .text:
   ac:	20 81       	ld	r18, Z
   ae:	21 60       	ori	r18, 0x01	; 1
   b0:	fc 01       	movw	r30, r24
-	}
-	else if (strcmp(bitString, "10101") == 0){
   b2:	20 83       	st	Z, r18
   b4:	89 e6       	ldi	r24, 0x69	; 105
+		j++; 
   b6:	90 e0       	ldi	r25, 0x00	; 0
   b8:	29 e6       	ldi	r18, 0x69	; 105
   ba:	30 e0       	ldi	r19, 0x00	; 0
   bc:	f9 01       	movw	r30, r18
   be:	20 81       	ld	r18, Z
-		currentID[i] = '5';
   c0:	22 60       	ori	r18, 0x02	; 2
   c2:	fc 01       	movw	r30, r24
   c4:	20 83       	st	Z, r18
   c6:	ff cf       	rjmp	.-2      	; 0xc6 <main+0x36>
 
 000000c8 <_exit>:
+		if(j==5){
   c8:	f8 94       	cli
 
 000000ca <__stop_program>:
