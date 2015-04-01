@@ -140,13 +140,13 @@ char addToID (){
 	else if (strcmp(bitString, "00010") == 0){
 		return '8';
 	}
-	else if (strcmp(bitString, "10011") == 0 ){
+	else if (strcmp(bitString, "10011") == 0){
 		return '9';
 	}
-	else if(strcmp(bitString, "11010")==0){
+	else if(strcmp(bitString, "11010") == 0){
 		return ';';
 	}
-	else if (strcmp(bitString, "11111")==0){
+	else if (strcmp(bitString, "11111")== 0){
 		return '?'; 	
 	}
 	return '*'; 
@@ -162,7 +162,7 @@ void nextBit(int dataPin){
 		if(j==5 && addToID() == ';'){
 			j=0; //reset 5bit string counter
 			startID = true; 
-			i = 0; 
+			i = 0;  
 			endID = false; 
 		}
 	}
@@ -182,6 +182,9 @@ void nextBit(int dataPin){
 			j = 0; 
 			if(addToID() == '?') {
 				endID = true; 
+				startID = false; 
+				i = 0; 
+				//validate id, end of card reached
 			}
 		}
 	}
